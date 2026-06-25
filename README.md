@@ -1,6 +1,6 @@
 <div align="center">
 
-# RA8P1 可插拔环境智控终端
+# RA8P1 环境智控终端
 
 **基于瑞萨 RA8P1 + ESP32-S3 + LVGL 的环境感知 · 本地 HMI · 云端 Agent 协同终端**
 

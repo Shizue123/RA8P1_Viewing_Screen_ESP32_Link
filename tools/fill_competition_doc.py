@@ -19,7 +19,7 @@ OUTPUT = Path(r"C:\Users\27729\Downloads\技术文档_已填写.docx")
 DELIVERY = Path(r"D:\Embedded-agent\Competition-documents\技术文档_已填写.docx")
 ASSET_DIR = Path(r"D:\Embedded-agent\Competition-documents\assets")
 
-TITLE = "智境方舟\n基于 RA8P1 的可插拔环境感知与 Agent 协同控制终端"
+TITLE = "智境方舟\n基于 RA8P1 的环境感知与 Agent 协同控制终端"
 BLUE = "1F4E78"
 LIGHT_BLUE = "D9EAF7"
 PALE = "F4F8FB"
@@ -380,7 +380,7 @@ def build_document():
     add_heading(doc, "摘要", 1)
     add_body(
         doc,
-        "本作品面向温室育苗柜、实验室样品柜和小型设备间，设计了一套以瑞萨 RA8P1 为本地安全核心的可插拔环境感知与 Agent 协同控制终端。系统通过 PCA9548A 在单一 I2C 标准口下挂载 AHT20 温湿度传感器和 BH1750 光照传感器，RA8P1 完成驱动、诊断、设备注册、数据新鲜度判断、触摸 HMI、规则状态机及 SG90 执行控制；ESP32-S3 仅承担 UART、Wi-Fi、MQTT 和 NTP 网络协处理。屏幕基于 320×480 ILI9488、FT6336 与 LVGL 构建，可按运行时设备注册表动态生成模块入口，避免固定页面与真实接线不一致。云端采用 Hermes/DeepSeek 理解自然语言，将候选控制意图转换为受限 rule_program.v1，经设备白名单、参数范围和知识约束校验后下发，RA8P1 按 ARMED、TRIGGERED、DONE 状态执行，并通过 deploy_ack、execution_state、status 和 telemetry 形成证据闭环。网络断开时，已经部署的规则仍可在 RA8P1 本地运行；传感数据不新鲜时，屏幕、网页和对话端明确报告不可用而不伪造数值。当前工程已完成温度、湿度、光照采集，动态模块显示，SG90 0-180°控制，Wi-Fi 配网，MQTT 状态同步和自然语言规则下发。作品兼顾物联网、嵌入式人工智能与工业 HMI，具备向农业环境控制、机柜运维和实验设备监测迁移的工程基础。",
+        "本作品面向温室育苗柜、实验室样品柜和小型设备间，设计了一套以瑞萨 RA8P1 为本地安全核心的环境感知与 Agent 协同控制终端。系统通过 PCA9548A 在单一 I2C 标准口下挂载 AHT20 温湿度传感器和 BH1750 光照传感器，RA8P1 完成驱动、诊断、设备注册、数据新鲜度判断、触摸 HMI、规则状态机及 SG90 执行控制；ESP32-S3 仅承担 UART、Wi-Fi、MQTT 和 NTP 网络协处理。屏幕基于 320×480 ILI9488、FT6336 与 LVGL 构建，可按运行时设备注册表动态生成模块入口，避免固定页面与真实接线不一致。云端采用 Hermes/DeepSeek 理解自然语言，将候选控制意图转换为受限 rule_program.v1，经设备白名单、参数范围和知识约束校验后下发，RA8P1 按 ARMED、TRIGGERED、DONE 状态执行，并通过 deploy_ack、execution_state、status 和 telemetry 形成证据闭环。网络断开时，已经部署的规则仍可在 RA8P1 本地运行；传感数据不新鲜时，屏幕、网页和对话端明确报告不可用而不伪造数值。当前工程已完成温度、湿度、光照采集，动态模块显示，SG90 0-180°控制，Wi-Fi 配网，MQTT 状态同步和自然语言规则下发。作品兼顾物联网、嵌入式人工智能与工业 HMI，具备向农业环境控制、机柜运维和实验设备监测迁移的工程基础。",
     )
     add_picture(doc, architecture, 16.2, "图 1  系统总体架构")
 
