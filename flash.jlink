@@ -1,0 +1,14 @@
+; J-Link烧录脚本 - RA8P1
+; 设备: R7KA8P1KF, SWD接口, 4MHz
+; 代码范围: 0x02000000 ~ 0x02045917 (278KB)
+; 只擦除代码所在区域，避免全片擦除超时
+si 1
+speed 4000
+device R7KA8P1KF
+if SWD
+connect
+erase 0x02000000, 0x80000
+loadfile "C:/temp/ra8p1_flash.srec"
+r
+g
+qc

@@ -1,0 +1,4 @@
+#ifndef R_IIC_MASTER_CFG_H_
+#define R_IIC_MASTER_CFG_H_
+#define IIC_MASTER_CFG_PARAM_CHECKING_ENABLE (0)
+#endif

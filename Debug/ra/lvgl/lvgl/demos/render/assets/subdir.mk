@@ -1,0 +1,53 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../ra/lvgl/lvgl/demos/render/assets/img_render_arc_bg.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_argb8888.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_argb8888_premultiplied.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_i1.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_l8.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565_swapped.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565a8.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb888.c \
+../ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_xrgb8888.c 
+
+C_DEPS += \
+./ra/lvgl/lvgl/demos/render/assets/img_render_arc_bg.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_argb8888.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_argb8888_premultiplied.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_i1.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_l8.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565_swapped.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565a8.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb888.d \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_xrgb8888.d 
+
+OBJS += \
+./ra/lvgl/lvgl/demos/render/assets/img_render_arc_bg.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_argb8888.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_argb8888_premultiplied.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_i1.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_l8.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565_swapped.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb565a8.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_rgb888.o \
+./ra/lvgl/lvgl/demos/render/assets/img_render_lvgl_logo_xrgb8888.o 
+
+SREC += \
+RA8P1_Viewing_Screen_ESP32_Link.srec 
+
+MAP += \
+RA8P1_Viewing_Screen_ESP32_Link.map 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+ra/lvgl/lvgl/demos/render/assets/%.o: ../ra/lvgl/lvgl/demos/render/assets/%.c
+	$(file > $@.in,-mthumb -mfloat-abi=hard -mcpu=cortex-m85+nopacbti -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-strict-aliasing -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal -g -D_RENESAS_RA_ -D_RA_CORE=CPU0 -D_RA_ORDINAL=1 -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra_gen" -I"." -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra_cfg/fsp_cfg/bsp" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra_cfg/fsp_cfg" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/src" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/fsp/inc" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/fsp/inc/api" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/fsp/inc/instances" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/arm/CMSIS_6/CMSIS/Core/Include" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/lvgl" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra_cfg/fsp_cfg/lvgl/lvgl" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/tileview" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/tabview" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/switch" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/spinbox" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/slider" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/roller" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/objx_templ" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/menu" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/list" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/led" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/keyboard" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/image" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/checkbox" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/canvas" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/buttonmatrix" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/bar" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/animimage" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/win" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/textarea" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/table" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/spinner" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/span" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/scale" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/property" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/msgbox" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/lottie" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/line" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/label" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/imagebutton" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/dropdown" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/chart" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/calendar" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/button" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/arc" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/widgets/3dtexture" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/themes" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/stdlib" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/others" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/osal" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/misc" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/libs" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/layouts" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/indev" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/font" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/drivers" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/draw" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/display" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src/core" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/src" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/examples" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl/demos" -I"D:/Renesas-Workspace/RA8P1_Viewing_Screen_ESP32_Link/ra/lvgl/lvgl" -std=c99 -Wno-stringop-overflow -Wno-format-truncation -w -flax-vector-conversions --param=min-pagesize=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" -x c "$<")
+	@echo Building file: $< && arm-none-eabi-gcc @"$@.in"
+

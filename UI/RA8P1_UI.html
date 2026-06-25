@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA8P1 即插即用平台交互原型</title>
+    <style>
+        :root {
+            --bg: #efe8dc;
+            --panel: #fffaf3;
+            --panel-strong: #ffffff;
+            --ink: #1f2320;
+            --muted: #6b726a;
+            --line: #d7d0c4;
+            --accent: #0f766e;
+            --accent-soft: #d5efe7;
+            --warn: #c77a18;
+            --warn-soft: #f7e4c9;
+            --danger: #b63d2b;
+            --danger-soft: #f7d7d1;
+            --ok: #2f855a;
+            --ok-soft: #d9f1e2;
+            --chip: #f3ede2;
+            --shadow: 0 18px 48px rgba(60, 44, 20, 0.14);
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --font-ui: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --font-mono: "Cascadia Code", "Consolas", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: var(--font-ui);
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(199, 122, 24, 0.18), transparent 24%),
+                linear-gradient(160deg, #f8f1e7 0%, #ede4d6 55%, #e6dccf 100%);
+        }
+
+        .shell {
+            width: min(1520px, calc(100vw - 36px));
+            margin: 18px auto;
+            display: grid;
+            grid-template-columns: 420px minmax(780px, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .device-column,
+        .cloud-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .caption-card,
+        .cloud-shell {
+            background: rgba(255, 250, 243, 0.88);
+            border: 1px solid rgba(215, 208, 196, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .caption-card {
+            border-radius: 24px;
+            padding: 18px 20px;
+        }
+
+        .caption-card h1,
+        .caption-card h2 {
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            margin-bottom: 10px;
+        }
+
+        .caption-card h1 {
+            font-size: 22px;
+        }
+
+        .caption-card h2 {
+            font-size: 18px;
+        }
+
+        .caption-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .mini-list {
+            margin-top: 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .mini-list div {
+            font-size: 13px;
+            color: var(--muted);
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(215, 208, 196, 0.72);
+        }
+
+        .device-frame {
+            width: 392px;
+            padding: 12px;
+            background: linear-gradient(180deg, #2d2a24 0%, #171511 100%);
+            border-radius: 36px;
+            box-shadow: 0 24px 60px rgba(20, 18, 14, 0.35);
+        }
+
+        .device-screen {
+            position: relative;
+            width: 368px;
+            height: 552px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 28px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            background:
+                radial-gradient(circle at top, rgba(15, 118, 110, 0.12), transparent 26%),
+                linear-gradient(180deg, #f8f2e8 0%, #f4ede1 62%, #efe6d9 100%);
+        }
+
+        .device-topbar {
+            height: 42px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(215, 208, 196, 0.92);
+            background: rgba(255, 250, 243, 0.88);
+        }
+
+        .device-topbar .title {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .device-topbar .meta {
+            display: flex;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .device-page {
+            display: none;
+            height: calc(100% - 42px - 66px);
+            overflow: auto;
+            padding: 16px 16px 22px;
+        }
+
+        .device-page.active {
+            display: block;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .section-head h3 {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .section-head span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .chip-card,
+        .metric-card,
+        .quick-card,
+        .panel-box,
+        .diag-row,
+        .module-card,
+        .event-row,
+        .history-row {
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(215, 208, 196, 0.82);
+            border-radius: var(--radius-md);
+        }
+
+        .chip-card {
+            padding: 11px 12px;
+        }
+
+        .chip-label {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .chip-value {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .dot.ok { background: var(--ok); }
+        .dot.wait { background: var(--warn); }
+        .dot.off { background: #7c827b; }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .metric-card {
+            padding: 14px;
+        }
+
+        .metric-card strong {
+            display: block;
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+
+        .metric-card small {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .wide-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .panel-box {
+            padding: 12px 14px;
+        }
+
+        .panel-box h4 {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .panel-box strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .panel-box p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .quick-card {
+            padding: 14px 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
+        .quick-card:hover,
+        .nav-btn:hover,
+        .action-btn:hover,
+        .side-nav button:hover,
+        .pill:hover,
+        .soft-btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(15, 118, 110, 0.32);
+            box-shadow: 0 8px 18px rgba(15, 118, 110, 0.08);
+        }
+
+        .quick-card .eyebrow {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .quick-card strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .quick-card p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .control-stack {
+            display: grid;
+            gap: 10px;
+        }
+
+        .action-btn,
+        .soft-btn,
+        .pill,
+        .nav-btn,
+        .side-nav button {
+            border: 1px solid rgba(215, 208, 196, 0.95);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--ink);
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            font-family: inherit;
+        }
+
+        .action-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .action-btn small {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .action-btn.disabled {
+            opacity: 0.56;
+            background: rgba(236, 232, 225, 0.84);
+        }
+
+        .mode-strip {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .pill {
+            padding: 12px 14px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .pill.active {
+            background: var(--accent-soft);
+            border-color: rgba(15, 118, 110, 0.36);
+            color: var(--accent);
+        }
+
+        .task-state {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .task-state span {
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: var(--chip);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .task-state span.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .kv-list {
+            display: grid;
+            gap: 9px;
+            margin-bottom: 12px;
+        }
+
+        .kv-row {
+            display: grid;
+            grid-template-columns: 84px 1fr;
+            gap: 10px;
+            align-items: start;
+            padding: 11px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(215, 208, 196, 0.82);
+        }
+
+        .kv-row label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .kv-row div {
+            font-size: 13px;
+            line-height: 1.45;
+            word-break: break-all;
+        }
+
+        .task-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .soft-btn {
+            padding: 12px 10px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .soft-btn.strong {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: rgba(15, 118, 110, 0.36);
+        }
+
+        .diag-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .diag-row {
+            padding: 12px 13px;
+        }
+
+        .diag-row strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .diag-row p {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .diag-actions {
+            margin-top: 12px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .device-navbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 66px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 10px 12px 12px;
+            background: rgba(255, 250, 243, 0.96);
+            border-top: 1px solid rgba(215, 208, 196, 0.96);
+        }
+
+        .nav-btn {
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .nav-btn.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: rgba(15, 118, 110, 0.36);
+        }
+
+        .cloud-shell {
+            border-radius: 30px;
+            padding: 16px;
+        }
+
+        .cloud-layout {
+            display: grid;
+            grid-template-columns: 210px minmax(320px, 1fr);
+            gap: 16px;
+            min-height: 860px;
+        }
+
+        .side-nav {
+            padding: 16px;
+            border-radius: 24px;
+            background: rgba(248, 241, 231, 0.82);
+            border: 1px solid rgba(215, 208, 196, 0.82);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .brand {
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(215, 208, 196, 0.88);
+        }
+
+        .brand h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .side-nav button {
+            text-align: left;
+            padding: 13px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .side-nav button.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: rgba(15, 118, 110, 0.36);
+        }
+
+        .side-summary {
+            margin-top: auto;
+            display: grid;
+            gap: 8px;
+        }
+
+        .side-summary div {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 14px;
+            border: 1px solid rgba(215, 208, 196, 0.82);
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .cloud-main {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 18px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(215, 208, 196, 0.86);
+        }
+
+        .toolbar h3 {
+            font-size: 20px;
+        }
+
+        .toolbar p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-actions .soft-btn {
+            min-width: 108px;
+        }
+
+        .cloud-page {
+            display: none;
+            gap: 14px;
+        }
+
+        .cloud-page.active {
+            display: grid;
+        }
+
+        .overview-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .overview-card,
+        .deploy-panel,
+        .module-card,
+        .event-row,
+        .history-row {
+            padding: 16px;
+        }
+
+        .overview-card {
+            min-height: 118px;
+        }
+
+        .overview-card h4,
+        .deploy-panel h4,
+        .module-card h4,
+        .event-row h4,
+        .history-row h4 {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .overview-card strong {
+            display: block;
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .overview-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .deploy-layout {
+            grid-template-columns: 1.1fr 0.95fr 0.95fr;
+        }
+
+        .deploy-panel {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(215, 208, 196, 0.88);
+            border-radius: 22px;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            border: 1px solid rgba(215, 208, 196, 0.95);
+            background: rgba(250, 247, 241, 0.9);
+            color: var(--ink);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 172px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .inline-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .inline-grid.two {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .code-box,
+        .trace-box {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.55;
+            background: #f4f0e7;
+            border: 1px solid rgba(215, 208, 196, 0.95);
+            border-radius: 14px;
+            padding: 12px;
+            white-space: pre-wrap;
+        }
+
+        .module-grid,
+        .history-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .module-card p,
+        .history-row p,
+        .event-row p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+            margin-bottom: 12px;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .badge.ok { background: var(--ok-soft); color: var(--ok); }
+        .badge.warn { background: var(--warn-soft); color: var(--warn); }
+        .badge.off { background: #ece7dc; color: #6d746b; }
+
+        .event-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .event-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .event-row,
+        .history-row,
+        .overview-card,
+        .module-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(215, 208, 196, 0.88);
+            border-radius: 20px;
+        }
+
+        .event-row header,
+        .history-row header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .event-row strong,
+        .history-row strong {
+            font-size: 16px;
+        }
+
+        .meta-text {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(31, 35, 32, 0.36);
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            z-index: 40;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-card {
+            width: min(460px, calc(100vw - 40px));
+            background: var(--panel-strong);
+            border: 1px solid rgba(215, 208, 196, 0.96);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid rgba(215, 208, 196, 0.92);
+        }
+
+        .modal-header h4 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .modal-header p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .modal-body {
+            padding: 16px 20px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .modal-option {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(215, 208, 196, 0.94);
+            background: rgba(248, 241, 231, 0.68);
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding: 0 20px 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            background: rgba(31, 35, 32, 0.92);
+            color: #fff;
+            border-radius: 999px;
+            padding: 12px 16px;
+            box-shadow: 0 16px 32px rgba(31, 35, 32, 0.2);
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.24s ease, transform 0.24s ease;
+            z-index: 80;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 1280px) {
+            .shell {
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+
+            .cloud-column {
+                width: 100%;
+            }
+
+            .cloud-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-nav {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .device-frame {
+                width: 100%;
+                max-width: 392px;
+            }
+
+            .device-screen {
+                width: 100%;
+                height: 552px;
+            }
+
+            .overview-grid,
+            .deploy-layout,
+            .module-grid,
+            .history-grid,
+            .inline-grid.two {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-actions {
+                justify-content: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <section class="device-column">
+            <div class="caption-card">
+                <h1>板端屏幕 HMI 原型</h1>
+                <p>按当前项目文档拆成 `首页 / 控制 / 任务 / 诊断` 四页，聚焦状态、快捷测试、任务确认和故障兜底，不承担复杂参数配置。</p>
+                <div class="mini-list">
+                    <div>当前角色：状态面板 + 快捷测试 + deploy_ack 可视化</div>
+                    <div>输入方式：大按钮触摸优先；可预留 `P303` 做回首页 / 紧急停止</div>
+                    <div>高频动作：`云端 Smoke`、`刷新传感器`、`查看任务`、`本地测试执行器`</div>
+                </div>
+            </div>
+
+            <div class="device-frame">
+                <div class="device-screen">
+                    <div class="device-topbar">
+                        <div class="title">RA8P1 现场操作屏</div>
+                        <div class="meta">
+                            <span>11:45</span>
+                            <span>Cloud OK</span>
+                        </div>
+                    </div>
+
+                    <section class="device-page active" data-page="home">
+                        <div class="section-head">
+                            <h3>系统总览</h3>
+                            <span>首页 / 状态总览</span>
+                        </div>
+
+                        <div class="status-grid">
+                            <div class="chip-card">
+                                <div class="chip-label">ESP32</div>
+                                <div class="chip-value"><span><span class="dot ok"></span>在线</span><span>UART</span></div>
+                            </div>
+                            <div class="chip-card">
+                                <div class="chip-label">WiFi</div>
+                                <div class="chip-value"><span><span class="dot ok"></span>已连</span><span>-58dBm</span></div>
+                            </div>
+                            <div class="chip-card">
+                                <div class="chip-label">MQTT</div>
+                                <div class="chip-value"><span><span class="dot ok"></span>在线</span><span>QoS1</span></div>
+                            </div>
+                            <div class="chip-card">
+                                <div class="chip-label">AHT20</div>
+                                <div class="chip-value"><span><span class="dot ok"></span>在线</span><span>Bus S1</span></div>
+                            </div>
+                        </div>
+
+                        <div class="hero-grid">
+                            <div class="metric-card">
+                                <div class="chip-label">温度</div>
+                                <strong>25.5C</strong>
+                                <small>AHT20 / 1s 前更新</small>
+                            </div>
+                            <div class="metric-card">
+                                <div class="chip-label">湿度</div>
+                                <strong>62.0%</strong>
+                                <small>AHT20 / CRC OK</small>
+                            </div>
+                        </div>
+
+                        <div class="wide-grid">
+                            <div class="panel-box">
+                                <h4>云端状态</h4>
+                                <strong>链路正常</strong>
+                                <p>Cloud -> MQTT -> ESP32 -> RA8P1 -> ACK 可复测</p>
+                            </div>
+                            <div class="panel-box">
+                                <h4>最近 ACK</h4>
+                                <strong>accepted</strong>
+                                <p>req_smoke_real_screen_001 / screen_text</p>
+                            </div>
+                        </div>
+
+                        <div class="section-head">
+                            <h3>快捷操作</h3>
+                            <span>2 x 2</span>
+                        </div>
+
+                        <div class="quick-grid">
+                            <button class="quick-card" data-action="cloud-smoke">
+                                <div class="eyebrow">快捷任务</div>
+                                <strong>云端 Smoke</strong>
+                                <p>发送一次 `screen_text` 联调任务，成功后跳到任务页。</p>
+                            </button>
+                            <button class="quick-card" data-action="refresh-sensor">
+                                <div class="eyebrow">传感器</div>
+                                <strong>刷新传感器</strong>
+                                <p>立即读取 AHT20，更新首页温湿度和云端状态摘要。</p>
+                            </button>
+                            <button class="quick-card" data-go-page="control">
+                                <div class="eyebrow">本地操作</div>
+                                <strong>设备控制</strong>
+                                <p>进入执行器测试页，做蜂鸣器、RGB、舵机联调。</p>
+                            </button>
+                            <button class="quick-card" data-go-page="task">
+                                <div class="eyebrow">任务跟踪</div>
+                                <strong>查看任务</strong>
+                                <p>查看最近一次 request、script、ACK 和命令摘要。</p>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="device-page" data-page="control">
+                        <div class="section-head">
+                            <h3>控制页</h3>
+                            <span>执行器联调</span>
+                        </div>
+
+                        <div class="wide-grid">
+                            <div class="panel-box">
+                                <h4>AHT20 当前值</h4>
+                                <strong>25.5C / 62.0%</strong>
+                                <p>在线，更新时间 1s 前</p>
+                            </div>
+                            <div class="panel-box">
+                                <h4>云端接管状态</h4>
+                                <strong>等待部署</strong>
+                                <p>本地模式可直接做单次测试，不依赖云端 intent。</p>
+                            </div>
+                        </div>
+
+                        <div class="control-stack">
+                            <button class="action-btn" data-action="buzzer-test">
+                                <span>蜂鸣器测试</span>
+                                <small>短鸣 / 长鸣 / 连续</small>
+                            </button>
+                            <button class="action-btn disabled" data-action="rgb-test">
+                                <span>RGB 灯测试</span>
+                                <small>未接入 / 预留</small>
+                            </button>
+                            <button class="action-btn disabled" data-action="servo-test">
+                                <span>舵机测试</span>
+                                <small>未接入 / 预留</small>
+                            </button>
+                            <button class="action-btn" data-action="stop-action">
+                                <span>停止动作</span>
+                                <small>立即停止当前测试</small>
+                            </button>
+                        </div>
+
+                        <div class="section-head" style="margin-top: 14px;">
+                            <h3>模式切换</h3>
+                            <span>只做说明，不做复杂设置</span>
+                        </div>
+
+                        <div class="mode-strip">
+                            <button class="pill active" data-action="mode-local">本地测试</button>
+                            <button class="pill" data-action="mode-cloud">云端控制</button>
+                        </div>
+                    </section>
+
+                    <section class="device-page" data-page="task">
+                        <div class="section-head">
+                            <h3>任务页</h3>
+                            <span>最近一次任务全过程</span>
+                        </div>
+
+                        <div class="task-state">
+                            <span>等待</span>
+                            <span class="active">已接收</span>
+                            <span class="active">已确认</span>
+                            <span>执行中</span>
+                            <span>完成</span>
+                            <span>失败</span>
+                        </div>
+
+                        <div class="kv-list">
+                            <div class="kv-row">
+                                <label>Request</label>
+                                <div>req_smoke_real_screen_001</div>
+                            </div>
+                            <div class="kv-row">
+                                <label>Script</label>
+                                <div>script_screen_52af91ac</div>
+                            </div>
+                            <div class="kv-row">
+                                <label>Intent</label>
+                                <div>screen_text</div>
+                            </div>
+                            <div class="kv-row">
+                                <label>Cmd</label>
+                                <div>screen_text("Smoke OK") -> cmd: screen text Smoke OK</div>
+                            </div>
+                            <div class="kv-row">
+                                <label>ACK</label>
+                                <div>accepted / state = SCRIPT_ACCEPTED</div>
+                            </div>
+                        </div>
+
+                        <div class="task-actions">
+                            <button class="soft-btn strong" data-action="task-detail">查看详情</button>
+                            <button class="soft-btn" data-action="task-replay">重新显示文本</button>
+                            <button class="soft-btn" data-action="task-clear">清除任务</button>
+                            <button class="soft-btn" data-go-page="home">返回首页</button>
+                        </div>
+                    </section>
+
+                    <section class="device-page" data-page="diag">
+                        <div class="section-head">
+                            <h3>诊断页</h3>
+                            <span>工程排障视图</span>
+                        </div>
+
+                        <div class="diag-list">
+                            <div class="diag-row">
+                                <strong>UART</strong>
+                                <p>SCI0 / 115200 / ping-pong 正常 / Last RX: intent:screen_text</p>
+                            </div>
+                            <div class="diag-row">
+                                <strong>WiFi / MQTT</strong>
+                                <p>WiFi connected / MQTT connected / cloudbridge/ra8p1_demo_001</p>
+                            </div>
+                            <div class="diag-row">
+                                <strong>AHT20</strong>
+                                <p>status=online; t=25.5; h=62.0; crc=ok</p>
+                            </div>
+                            <div class="diag-row">
+                                <strong>最近异常</strong>
+                                <p>无异常。错误计数 0。建议联调时拍照此页做现场留档。</p>
+                            </div>
+                        </div>
+
+                        <div class="diag-actions">
+                            <button class="action-btn" data-action="diag-handshake">
+                                <span>重新握手</span>
+                                <small>向 ESP32 发起 ping / pong</small>
+                            </button>
+                            <button class="action-btn" data-action="diag-snapshot">
+                                <span>状态快照</span>
+                                <small>弹出可拍照文本摘要</small>
+                            </button>
+                            <button class="action-btn" data-action="diag-export">
+                                <span>导出摘要</span>
+                                <small>显示一页纯文本诊断摘要</small>
+                            </button>
+                            <button class="action-btn" data-action="diag-clear">
+                                <span>清空错误</span>
+                                <small>只清本地显示，不影响云端</small>
+                            </button>
+                        </div>
+                    </section>
+
+                    <nav class="device-navbar">
+                        <button class="nav-btn active" data-go-page="home">首页</button>
+                        <button class="nav-btn" data-go-page="control">控制</button>
+                        <button class="nav-btn" data-go-page="task">任务</button>
+                        <button class="nav-btn" data-go-page="diag">诊断</button>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <section class="cloud-column">
+            <div class="caption-card">
+                <h2>云端 Web 控制台原型</h2>
+                <p>按 `总览 / 部署 / 模块 / 事件 / 历史` 五页组织，左侧做设备与页面导航，右侧按当前选中页显示操作和结果，适合答辩演示和后续实现。</p>
+            </div>
+
+            <div class="cloud-shell">
+                <div class="cloud-layout">
+                    <aside class="side-nav">
+                        <div class="brand">
+                            <h2>Cloud Agent</h2>
+                            <p>面向 `ra8p1_demo_001` 的编排、部署、ACK 与联调控制台。</p>
+                        </div>
+
+                        <button class="active" data-cloud-page="overview">总览</button>
+                        <button data-cloud-page="deploy">部署</button>
+                        <button data-cloud-page="modules">模块</button>
+                        <button data-cloud-page="events">事件</button>
+                        <button data-cloud-page="history">历史</button>
+
+                        <div class="side-summary">
+                            <div>设备：`ra8p1_demo_001`</div>
+                            <div>当前基线：`screen_text + deploy_ack + AHT20`</div>
+                            <div>下一阶段：补第一个真实执行器闭环</div>
+                        </div>
+                    </aside>
+
+                    <main class="cloud-main">
+                        <div class="toolbar">
+                            <div>
+                                <h3>云端控制台</h3>
+                                <p>自然语言 -> intent -> Lua / MQTT -> publish -> ACK</p>
+                            </div>
+                            <div class="toolbar-actions">
+                                <button class="soft-btn strong" data-action="web-smoke">快速 Smoke</button>
+                                <button class="soft-btn" data-action="web-open-device">查看设备</button>
+                                <button class="soft-btn" data-cloud-page="deploy">进入部署</button>
+                            </div>
+                        </div>
+
+                        <section class="cloud-page active overview-grid" data-cloud-page="overview">
+                            <div class="overview-card">
+                                <h4>设备状态</h4>
+                                <strong>在线</strong>
+                                <p>ESP32 / WiFi / MQTT / AHT20 均在线，云端 ACK 可回传。</p>
+                            </div>
+                            <div class="overview-card">
+                                <h4>当前温湿度</h4>
+                                <strong>25.5C</strong>
+                                <p>湿度 62.0%，AHT20 1 秒前更新。</p>
+                            </div>
+                            <div class="overview-card">
+                                <h4>最近 ACK</h4>
+                                <strong>accepted</strong>
+                                <p>req_smoke_real_screen_001 / screen_text</p>
+                            </div>
+                            <div class="overview-card">
+                                <h4>最近任务</h4>
+                                <strong>screen_text</strong>
+                                <p>graph trace 完整，ACK 已收到。</p>
+                            </div>
+                            <div class="overview-card">
+                                <h4>最近 5 条事件</h4>
+                                <p>deploy_ack / status_update / telemetry_tick / screen_update / mqtt_connected</p>
+                            </div>
+                            <div class="overview-card">
+                                <h4>建议动作</h4>
+                                <p>先跑一次 `screen_text` smoke，再推进蜂鸣器闭环。</p>
+                            </div>
+                        </section>
+
+                        <section class="cloud-page deploy-layout" data-cloud-page="deploy">
+                            <div class="deploy-panel">
+                                <h4>自然语言 / 模板入口</h4>
+                                <textarea id="nl-input">屏幕显示 Smoke OK</textarea>
+                                <div class="panel-actions">
+                                    <button class="soft-btn strong" data-action="deploy-parse">解析</button>
+                                    <button class="soft-btn" data-action="deploy-compile">编译</button>
+                                    <button class="soft-btn" data-action="deploy-send">部署</button>
+                                </div>
+
+                                <div class="section-head" style="margin-top: 14px;">
+                                    <h3 style="font-size: 14px;">快捷模板</h3>
+                                    <span>当前阶段优先</span>
+                                </div>
+
+                                <div class="panel-actions">
+                                    <button class="soft-btn" data-action="template-screen-text">屏幕文本</button>
+                                    <button class="soft-btn" data-action="template-threshold">阈值控制</button>
+                                    <button class="soft-btn" data-action="deploy-stop">停止任务</button>
+                                </div>
+                            </div>
+
+                            <div class="deploy-panel">
+                                <h4>intent / Lua / payload 预览</h4>
+                                <div class="inline-grid">
+                                    <div class="code-box">intent:
+{
+  "intent_type": "screen_text",
+  "target_devices": ["SCREEN"],
+  "actions": [{"device":"SCREEN","method":"screen_text","params":{"text":"Smoke OK"}}]
+}</div>
+                                    <div class="code-box">lua:
+screen_text("Smoke OK")
+
+payload:
+type = deploy_script
+channel = script
+need_confirm = true</div>
+                                </div>
+                            </div>
+
+                            <div class="deploy-panel">
+                                <h4>graph trace / ACK</h4>
+                                <div class="trace-box">resolve_device
+load_runtime_knowledge
+validate_intent
+compile_lua
+build_mqtt_message
+validate_mqtt_message
+publish_mqtt
+record_deploy
+wait_for_ack
+record_ack</div>
+                                <div class="section-head" style="margin-top: 12px;">
+                                    <h3 style="font-size: 14px;">最近结果</h3>
+                                    <span>event</span>
+                                </div>
+                                <div class="code-box">request_id = req_smoke_real_screen_001
+type = deploy_ack
+code = 0
+message = accepted
+state = SCRIPT_ACCEPTED</div>
+                            </div>
+                        </section>
+
+                        <section class="cloud-page module-grid" data-cloud-page="modules">
+                            <div class="module-card">
+                                <h4>AHT20</h4>
+                                <div class="badge-row">
+                                    <span class="badge ok">已在线</span>
+                                    <span class="badge ok">可读</span>
+                                </div>
+                                <p>真实硬件已确认。支持温湿度采样和 telemetry/status 上报。</p>
+                                <div class="panel-actions">
+                                    <button class="soft-btn strong" data-action="module-test-aht20">测试</button>
+                                    <button class="soft-btn" data-action="module-cap-aht20">查看能力</button>
+                                </div>
+                            </div>
+                            <div class="module-card">
+                                <h4>SCREEN</h4>
+                                <div class="badge-row">
+                                    <span class="badge ok">已在线</span>
+                                    <span class="badge ok">可部署</span>
+                                </div>
+                                <p>当前真实 smoke 基线。推荐所有联调先从 `screen_text` 开始。</p>
+                                <div class="panel-actions">
+                                    <button class="soft-btn strong" data-action="module-test-screen">测试</button>
+                                    <button class="soft-btn" data-action="module-cap-screen">查看能力</button>
+                                </div>
+                            </div>
+                            <div class="module-card">
+                                <h4>BUZZER</h4>
+                                <div class="badge-row">
+                                    <span class="badge warn">待接入</span>
+                                    <span class="badge warn">首个执行器候选</span>
+                                </div>
+                                <p>当前建议先补 `AHT20.temp -> 蜂鸣器` 真实闭环。</p>
+                                <div class="panel-actions">
+                                    <button class="soft-btn" data-action="module-mark-buzzer">标记已接入</button>
+                                    <button class="soft-btn" data-action="module-cap-buzzer">查看能力</button>
+                                </div>
+                            </div>
+                            <div class="module-card">
+                                <h4>SG90</h4>
+                                <div class="badge-row">
+                                    <span class="badge off">未接入</span>
+                                    <span class="badge off">后续阶段</span>
+                                </div>
+                                <p>需要额外确认 GPT 引脚、供电和 5V 电流能力。</p>
+                                <div class="panel-actions">
+                                    <button class="soft-btn" data-action="module-mark-servo">标记已接入</button>
+                                    <button class="soft-btn" data-action="module-cap-servo">查看能力</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="cloud-page" data-cloud-page="events">
+                            <div class="deploy-panel">
+                                <h4>事件流</h4>
+                                <div class="event-filters">
+                                    <button class="soft-btn strong" data-action="filter-all">全部</button>
+                                    <button class="soft-btn" data-action="filter-ack">ACK</button>
+                                    <button class="soft-btn" data-action="filter-sensor">传感器</button>
+                                    <button class="soft-btn" data-action="filter-error">错误</button>
+                                </div>
+                                <div class="event-list">
+                                    <div class="event-row" data-action="event-detail-ack">
+                                        <header>
+                                            <strong>deploy_ack</strong>
+                                            <span class="meta-text">11:44:16</span>
+                                        </header>
+                                        <h4>request_id = req_smoke_real_screen_001</h4>
+                                        <p>code = 0 / message = accepted / state = SCRIPT_ACCEPTED</p>
+                                    </div>
+                                    <div class="event-row" data-action="event-detail-telemetry">
+                                        <header>
+                                            <strong>telemetry</strong>
+                                            <span class="meta-text">11:44:14</span>
+                                        </header>
+                                        <h4>payload.aht20</h4>
+                                        <p>temp = 25.5 / humidity = 62.0 / crc_ok = true</p>
+                                    </div>
+                                    <div class="event-row" data-action="event-detail-status">
+                                        <header>
+                                            <strong>status</strong>
+                                            <span class="meta-text">11:44:12</span>
+                                        </header>
+                                        <h4>mqtt connected</h4>
+                                        <p>device_id = ra8p1_demo_001 / runtime store updated</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="cloud-page history-grid" data-cloud-page="history">
+                            <div class="history-row" data-action="history-detail-screen">
+                                <header>
+                                    <strong>req_smoke_real_screen_001</strong>
+                                    <span class="meta-text">today / 11:44</span>
+                                </header>
+                                <h4>screen_text / ACK ok</h4>
+                                <p>Smoke OK / graph trace 完整 / deploy_ack 已记录</p>
+                            </div>
+                            <div class="history-row" data-action="history-detail-threshold">
+                                <header>
+                                    <strong>req_demo_threshold_001</strong>
+                                    <span class="meta-text">planned</span>
+                                </header>
+                                <h4>threshold_control / 待真实闭环</h4>
+                                <p>AHT20.temp > 30 -> buzzer，当前仍是下一阶段目标。</p>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-backdrop" id="modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h4 id="modal-title">标题</h4>
+                <p id="modal-desc">描述</p>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const devicePages = [...document.querySelectorAll(".device-page")];
+        const navButtons = [...document.querySelectorAll(".nav-btn")];
+        const cloudPages = [...document.querySelectorAll(".cloud-page")];
+        const cloudButtons = [...document.querySelectorAll("[data-cloud-page]")];
+        const modal = document.getElementById("modal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalDesc = document.getElementById("modal-desc");
+        const modalBody = document.getElementById("modal-body");
+        const modalFooter = document.getElementById("modal-footer");
+        const toast = document.getElementById("toast");
+
+        let toastTimer = null;
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+        }
+
+        function setDevicePage(page) {
+            devicePages.forEach((section) => {
+                section.classList.toggle("active", section.dataset.page === page);
+            });
+            navButtons.forEach((button) => {
+                button.classList.toggle("active", button.dataset.goPage === page);
+            });
+        }
+
+        function setCloudPage(page) {
+            cloudPages.forEach((section) => {
+                section.classList.toggle("active", section.dataset.cloudPage === page);
+            });
+            cloudButtons.forEach((button) => {
+                button.classList.toggle("active", button.dataset.cloudPage === page);
+            });
+        }
+
+        function closeModal() {
+            modal.classList.remove("open");
+        }
+
+        function openModal(config) {
+            modalTitle.textContent = config.title;
+            modalDesc.textContent = config.description || "";
+            modalBody.innerHTML = "";
+            modalFooter.innerHTML = "";
+
+            (config.options || []).forEach((option) => {
+                const button = document.createElement("button");
+                button.className = "modal-option";
+                button.textContent = option.label;
+                button.addEventListener("click", () => {
+                    if (option.onClick) {
+                        option.onClick();
+                    }
+                });
+                modalBody.appendChild(button);
+            });
+
+            (config.actions || [{ label: "关闭", onClick: closeModal }]).forEach((action) => {
+                const button = document.createElement("button");
+                button.className = "soft-btn" + (action.strong ? " strong" : "");
+                button.textContent = action.label;
+                button.addEventListener("click", () => {
+                    if (action.onClick) {
+                        action.onClick();
+                    }
+                });
+                modalFooter.appendChild(button);
+            });
+
+            modal.classList.add("open");
+        }
+
+        function actionCloudSmoke() {
+            openModal({
+                title: "执行云端联调？",
+                description: "将发送一次 screen_text smoke 任务，并在成功后跳转到任务页查看 request、script 和 ACK。",
+                actions: [
+                    { label: "取消", onClick: closeModal },
+                    {
+                        label: "执行",
+                        strong: true,
+                        onClick: () => {
+                            closeModal();
+                            showToast("正在发送 screen_text smoke...");
+                            setTimeout(() => {
+                                setDevicePage("task");
+                                setCloudPage("deploy");
+                                showToast("ACK 已收到，已跳转到任务页");
+                            }, 700);
+                        }
+                    }
+                ]
+            });
+        }
+
+        const actionMap = {
+            "cloud-smoke": actionCloudSmoke,
+            "refresh-sensor": () => {
+                showToast("正在读取 AHT20...");
+                setTimeout(() => showToast("刷新完成：25.5C / 62.0%"), 700);
+            },
+            "buzzer-test": () => openModal({
+                title: "蜂鸣器测试",
+                description: "选择一个本地测试动作。当前建议先用蜂鸣器做第一个真实执行器闭环。",
+                options: [
+                    { label: "短鸣 200ms", onClick: () => { closeModal(); showToast("蜂鸣器：短鸣 200ms"); } },
+                    { label: "长鸣 1s", onClick: () => { closeModal(); showToast("蜂鸣器：长鸣 1s"); } },
+                    { label: "连续鸣叫", onClick: () => { closeModal(); showToast("蜂鸣器：连续鸣叫"); } }
+                ],
+                actions: [{ label: "取消", onClick: closeModal }]
+            }),
+            "rgb-test": () => openModal({
+                title: "RGB 灯测试",
+                description: "当前模块尚未接入。界面保留位置，避免误判为系统目标能力缺失。",
+                actions: [{ label: "知道了", strong: true, onClick: closeModal }]
+            }),
+            "servo-test": () => openModal({
+                title: "舵机测试",
+                description: "当前模块尚未接入。后续需要确认 GPT 引脚、5V 供电和电流能力。",
+                actions: [{ label: "知道了", strong: true, onClick: closeModal }]
+            }),
+            "stop-action": () => openModal({
+                title: "停止当前动作？",
+                description: "立即停止当前本地测试或执行器动作。",
+                actions: [
+                    { label: "取消", onClick: closeModal },
+                    { label: "停止", strong: true, onClick: () => { closeModal(); showToast("当前动作已停止"); } }
+                ]
+            }),
+            "mode-local": () => openModal({
+                title: "本地测试模式",
+                description: "直接执行一次本地测试动作，不依赖云端规则。",
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "mode-cloud": () => openModal({
+                title: "云端控制模式",
+                description: "等待云端部署的任务触发动作。适合正式演示和 ACK 联调。",
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "task-detail": () => openModal({
+                title: "任务详情",
+                description: "最近一次任务的关键信息摘要。",
+                options: [
+                    { label: "request_id = req_smoke_real_screen_001" },
+                    { label: "script_id = script_screen_52af91ac" },
+                    { label: "intent_type = screen_text" },
+                    { label: "ACK message = accepted / state = SCRIPT_ACCEPTED" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "task-replay": () => {
+                showToast("已重放最近一次 screen_text");
+            },
+            "task-clear": () => openModal({
+                title: "清除任务展示？",
+                description: "只清除板端显示，不影响云端部署历史记录。",
+                actions: [
+                    { label: "取消", onClick: closeModal },
+                    {
+                        label: "清除",
+                        strong: true,
+                        onClick: () => {
+                            closeModal();
+                            showToast("当前任务显示已清空");
+                        }
+                    }
+                ]
+            }),
+            "diag-handshake": () => {
+                showToast("正在发起 ping / pong 握手");
+            },
+            "diag-snapshot": () => openModal({
+                title: "状态快照",
+                description: "可用于现场拍照留档。",
+                options: [
+                    { label: "UART = online / SCI0 / 115200" },
+                    { label: "WiFi = connected / MQTT = connected" },
+                    { label: "AHT20 = online / temp = 25.5 / hum = 62.0" },
+                    { label: "Last ACK = accepted / SCRIPT_ACCEPTED" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "diag-export": () => openModal({
+                title: "导出摘要",
+                description: "当前原型用弹窗模拟一页纯文本导出视图。",
+                options: [
+                    { label: "[SUMMARY] device=ra8p1_demo_001" },
+                    { label: "[STATUS] esp32=online wifi=connected mqtt=connected" },
+                    { label: "[AHT20] t=25.5 h=62.0 crc=ok" },
+                    { label: "[ACK] request=req_smoke_real_screen_001 accepted" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "diag-clear": () => {
+                showToast("本地错误显示已清空");
+            },
+            "web-smoke": actionCloudSmoke,
+            "web-open-device": () => {
+                setCloudPage("overview");
+                showToast("已定位到设备总览");
+            },
+            "deploy-parse": () => showToast("已生成 intent 预览"),
+            "deploy-compile": () => showToast("已生成 Lua 和 MQTT payload"),
+            "deploy-send": () => {
+                setCloudPage("deploy");
+                showToast("部署已下发，等待 ACK...");
+                setTimeout(() => showToast("deploy_ack 已收到"), 900);
+            },
+            "deploy-stop": () => openModal({
+                title: "停止任务",
+                description: "向当前设备发送停止命令或停止标记。",
+                actions: [
+                    { label: "取消", onClick: closeModal },
+                    { label: "发送停止", strong: true, onClick: () => { closeModal(); showToast("停止任务命令已发送"); } }
+                ]
+            }),
+            "template-screen-text": () => openModal({
+                title: "屏幕文本模板",
+                description: "当前真实硬件 smoke deploy 推荐模板。",
+                options: [
+                    { label: "显示内容：Smoke OK", onClick: () => {
+                        document.getElementById("nl-input").value = "屏幕显示 Smoke OK";
+                        closeModal();
+                        showToast("已填入 screen_text 模板");
+                    } }
+                ],
+                actions: [{ label: "关闭", onClick: closeModal }]
+            }),
+            "template-threshold": () => openModal({
+                title: "阈值控制模板",
+                description: "用于下一阶段第一个真实执行器闭环。当前建议：AHT20.temp > 30 -> 蜂鸣器。",
+                options: [
+                    { label: "AHT20.temp > 30 -> 蜂鸣器", onClick: () => { closeModal(); showToast("已选择阈值控制模板"); } },
+                    { label: "AHT20.temp > 30 -> RGB", onClick: () => { closeModal(); showToast("已选择 RGB 模板"); } },
+                    { label: "AHT20.temp > 30 -> 舵机", onClick: () => { closeModal(); showToast("已选择舵机模板"); } }
+                ],
+                actions: [{ label: "关闭", onClick: closeModal }]
+            }),
+            "module-test-aht20": () => showToast("AHT20 在线测试已触发"),
+            "module-cap-aht20": () => openModal({
+                title: "AHT20 能力",
+                description: "已确认真实闭环能力。",
+                options: [
+                    { label: "temp / humidity 读取" },
+                    { label: "telemetry / status 上报" },
+                    { label: "可用于 threshold_control 条件源" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "module-test-screen": () => showToast("已准备一次 screen_text 测试"),
+            "module-cap-screen": () => openModal({
+                title: "SCREEN 能力",
+                description: "当前真实 smoke 基线。",
+                options: [
+                    { label: "screen_text 文本显示" },
+                    { label: "deploy_ack 视觉确认" },
+                    { label: "任务页 Request / Script / ACK 更新" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "module-mark-buzzer": () => showToast("已标记 BUZZER 为候选接入模块"),
+            "module-cap-buzzer": () => openModal({
+                title: "BUZZER 能力",
+                description: "当前建议作为第一个真实执行器闭环。",
+                options: [
+                    { label: "本地测试动作：短鸣 / 长鸣 / 连续" },
+                    { label: "云端目标：AHT20.temp -> buzzer" },
+                    { label: "后续需要：引脚、供电、驱动方式确认" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "module-mark-servo": () => showToast("已标记 SG90 为后续阶段模块"),
+            "module-cap-servo": () => openModal({
+                title: "SG90 能力",
+                description: "属于后续阶段目标，不是当前最小闭环首选。",
+                options: [
+                    { label: "需要 GPT/PWM 引脚" },
+                    { label: "需要外部 5V 供电与共地" },
+                    { label: "风险高于蜂鸣器 / RGB" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "filter-all": () => showToast("事件筛选：全部"),
+            "filter-ack": () => showToast("事件筛选：ACK"),
+            "filter-sensor": () => showToast("事件筛选：传感器"),
+            "filter-error": () => showToast("事件筛选：错误"),
+            "event-detail-ack": () => openModal({
+                title: "deploy_ack 详情",
+                description: "当前真实链路核心回执。",
+                options: [
+                    { label: "topic = cloudbridge/ra8p1_demo_001/event" },
+                    { label: "request_id = req_smoke_real_screen_001" },
+                    { label: "code = 0 / message = accepted" },
+                    { label: "state = SCRIPT_ACCEPTED" }
+                ],
+                actions: [{ label: "关闭", strong: true, onClick: closeModal }]
+            }),
+            "event-detail-telemetry": () => showToast("查看 telemetry 详情"),
+            "event-detail-status": () => showToast("查看 status 详情"),
+            "history-detail-screen": () => showToast("已打开 screen_text 历史详情"),
+            "history-detail-threshold": () => showToast("已打开 threshold_control 历史详情")
+        };
+
+        document.querySelectorAll("[data-go-page]").forEach((button) => {
+            button.addEventListener("click", () => setDevicePage(button.dataset.goPage));
+        });
+
+        cloudButtons.forEach((button) => {
+            button.addEventListener("click", () => setCloudPage(button.dataset.cloudPage));
+        });
+
+        document.querySelectorAll("[data-action]").forEach((element) => {
+            element.addEventListener("click", () => {
+                const fn = actionMap[element.dataset.action];
+                if (fn) {
+                    fn();
+                }
+            });
+        });
+
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

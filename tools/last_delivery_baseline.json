@@ -1,0 +1,1343 @@
+{
+  "started_at": 1780454731,
+  "finished_at": 1780454772,
+  "device_id": "ra8p1_demo_001",
+  "cooldown_seconds": 2.0,
+  "rule_program": {
+    "request_id": "rpv_1780454731907",
+    "ok": false,
+    "deploy_ack_received": false,
+    "script_state": "TRIGGERED",
+    "last_request_id": "rtv_1780402401251",
+    "last_script_id": "script_140674478b26",
+    "last_intent_type": "threshold_control",
+    "execution_state": "TRIGGERED",
+    "execution_reason": "COND_TRUE",
+    "action": "SG90",
+    "angle": 180,
+    "threshold": 25,
+    "temp": 28.4
+  },
+  "threshold_control": {
+    "request_id": "rtv_1780454761006",
+    "ok": false,
+    "deploy_ack_received": false,
+    "script_state": "TRIGGERED",
+    "last_request_id": "rtv_1780402401251",
+    "last_script_id": "script_140674478b26",
+    "last_intent_type": null,
+    "execution_state": "TRIGGERED",
+    "execution_reason": "COND_TRUE",
+    "action": "SG90",
+    "angle": 180,
+    "threshold": 25,
+    "temp": 28.4
+  },
+  "rule_program_raw": {
+    "request_id": "rpv_1780454731907",
+    "deploy_ack_received": false,
+    "graph_trace": [
+      "resolve_device",
+      "load_runtime_knowledge",
+      "validate_program",
+      "compile_rule_program_lua",
+      "build_mqtt_message",
+      "validate_mqtt_message",
+      "publish_mqtt",
+      "record_deploy",
+      "wait_for_ack",
+      "record_ack"
+    ],
+    "program_source": "rule_based_action_plan_v1",
+    "deployment": {
+      "request_id": "rpv_1780454731907",
+      "device_id": "ra8p1_demo_001",
+      "script_id": "script_7a9f66bb2716",
+      "topic": "cloudbridge/ra8p1_demo_001/script",
+      "intent": {
+        "rule_program": {
+          "actions": [
+            {
+              "device": "SG90",
+              "method": "servo_set",
+              "params": {
+                "angle": 30,
+                "duration_ms": 350
+              }
+            },
+            {
+              "device": "SG90",
+              "method": "servo_set",
+              "params": {
+                "angle": 150,
+                "duration_ms": 350
+              }
+            },
+            {
+              "device": "SG90",
+              "method": "servo_set",
+              "params": {
+                "angle": 30,
+                "duration_ms": 350
+              }
+            },
+            {
+              "device": "SG90",
+              "method": "servo_set",
+              "params": {
+                "angle": 150,
+                "duration_ms": 350
+              }
+            },
+            {
+              "device": "SG90",
+              "method": "servo_set",
+              "params": {
+                "angle": 90,
+                "duration_ms": 350
+              }
+            }
+          ],
+          "cooldown_ms": 30000,
+          "description": "���¶ȵ�25��ʱ,���������ת����",
+          "loop_interval_ms": 1000,
+          "program_id": "rp_be453d4ef5c9",
+          "trigger": {
+            "operator": ">=",
+            "sensor": "AHT20.temp",
+            "value": 25.0
+          },
+          "version": "rule_program.v1"
+        }
+      },
+      "lua_code": "local last_run = 0\nwhile true do\n  local data = aht20_read()\n  if data.temp >= 25 then\n    if (millis() - last_run) >= 30000 then\n    servo_set(30)\n    delay(350)\n    servo_set(150)\n    delay(350)\n    servo_set(30)\n    delay(350)\n    servo_set(150)\n    delay(350)\n    servo_set(90)\n    delay(350)\n      last_run = millis()\n    end\n  end\n  delay(1000)\nend",
+      "mqtt_message": {
+        "payload": {
+          "auth_signature": "5afbf46ca071a88263577118f622e1c0d371b9fbfb6ede9c1da491932076ec86",
+          "checksum": "sha256:6b737c38d4605a9503117ff757de0200d4648266ea6f225706bb5ae488dccd4a",
+          "intent_type": "rule_program",
+          "lua_code": "local last_run = 0\nwhile true do\n  local data = aht20_read()\n  if data.temp >= 25 then\n    if (millis() - last_run) >= 30000 then\n    servo_set(30)\n    delay(350)\n    servo_set(150)\n    delay(350)\n    servo_set(30)\n    delay(350)\n    servo_set(150)\n    delay(350)\n    servo_set(90)\n    delay(350)\n      last_run = millis()\n    end\n  end\n  delay(1000)\nend",
+          "need_confirm": true,
+          "rule_program": {
+            "actions": [
+              {
+                "device": "SG90",
+                "method": "servo_set",
+                "params": {
+                  "angle": 30,
+                  "duration_ms": 350
+                }
+              },
+              {
+                "device": "SG90",
+                "method": "servo_set",
+                "params": {
+                  "angle": 150,
+                  "duration_ms": 350
+                }
+              },
+              {
+                "device": "SG90",
+                "method": "servo_set",
+                "params": {
+                  "angle": 30,
+                  "duration_ms": 350
+                }
+              },
+              {
+                "device": "SG90",
+                "method": "servo_set",
+                "params": {
+                  "angle": 150,
+                  "duration_ms": 350
+                }
+              },
+              {
+                "device": "SG90",
+                "method": "servo_set",
+                "params": {
+                  "angle": 90,
+                  "duration_ms": 350
+                }
+              }
+            ],
+            "cooldown_ms": 30000,
+            "description": "���¶ȵ�25��ʱ,���������ת����",
+            "loop_interval_ms": 1000,
+            "program_id": "rp_be453d4ef5c9",
+            "trigger": {
+              "operator": ">=",
+              "sensor": "AHT20.temp",
+              "value": 25.0
+            },
+            "version": "rule_program.v1"
+          },
+          "script_id": "script_7a9f66bb2716",
+          "target_device_id": "ra8p1_demo_001",
+          "version": "v1"
+        },
+        "request_id": "rpv_1780454731907",
+        "timestamp": 1780454740,
+        "type": "deploy_script"
+      },
+      "lua_validation": {
+        "calls": [
+          "aht20_read",
+          "delay",
+          "if",
+          "millis",
+          "servo_set"
+        ],
+        "errors": [],
+        "ok": true
+      },
+      "mqtt_enabled": true,
+      "published": true,
+      "ack_received": false,
+      "ack": null,
+      "created_at": 1780454741,
+      "updated_at": 1780454741
+    },
+    "device_script_state": "TRIGGERED",
+    "device_last_request_id": "rtv_1780402401251",
+    "device_last_script_id": "script_140674478b26",
+    "device_last_intent_type": "threshold_control",
+    "device_temp": 28.4,
+    "device_last_execution": {
+      "state": "TRIGGERED",
+      "reason": "COND_TRUE",
+      "operator": ">",
+      "action": "SG90",
+      "sample": true,
+      "threshold": 25,
+      "angle": 180,
+      "temp": 28.4
+    },
+    "last_event": {
+      "payload": {
+        "device_id": "ra8p1_demo_001",
+        "script_id": "script_140674478b26",
+        "state": "TRIGGERED",
+        "sample": true,
+        "reason": "COND_TRUE",
+        "operator": ">",
+        "action": "SG90",
+        "threshold": 25,
+        "angle": 180,
+        "temp": 28.4
+      },
+      "type": "execution_state",
+      "request_id": "rtv_1780402401251"
+    },
+    "recent_events": [
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "online",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.3,
+              "humidity": 41.4
+            }
+          },
+          "type": "status"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.3,
+              "humidity": 41.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "online",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            }
+          },
+          "type": "status"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "online",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            }
+          },
+          "type": "status"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "waiting",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.5
+            }
+          },
+          "type": "status"
+        }
+      }
+    ],
+    "recent_messages": [
+      {
+        "id": 202313,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402522
+      },
+      {
+        "id": 202312,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402519
+      },
+      {
+        "id": 202311,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "online",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402519
+      },
+      {
+        "id": 202310,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402517
+      },
+      {
+        "id": 202309,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402517
+      },
+      {
+        "id": 202308,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.4,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402515
+      },
+      {
+        "id": 202307,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.4,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402514
+      },
+      {
+        "id": 202306,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402512
+      },
+      {
+        "id": 202305,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402512
+      },
+      {
+        "id": 202304,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.4,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402509
+      }
+    ],
+    "execution_states": [],
+    "observed_states": [
+      "TRIGGERED",
+      "TRIGGERED"
+    ],
+    "ok": false
+  },
+  "threshold_control_raw": {
+    "request_id": "rtv_1780454761006",
+    "deploy_ack_received": false,
+    "graph_trace": [
+      "resolve_device",
+      "load_runtime_knowledge",
+      "validate_intent",
+      "compile_lua",
+      "build_mqtt_message",
+      "validate_mqtt_message",
+      "publish_mqtt",
+      "record_deploy",
+      "wait_for_ack",
+      "record_ack"
+    ],
+    "deployment": {
+      "request_id": "rtv_1780454761006",
+      "device_id": "ra8p1_demo_001",
+      "script_id": "script_140674478b26",
+      "topic": "cloudbridge/ra8p1_demo_001/script",
+      "intent": {
+        "actions": [
+          {
+            "device": "SG90",
+            "method": "servo_set",
+            "params": {
+              "angle": 180
+            }
+          }
+        ],
+        "conditions": {
+          "operator": ">",
+          "sensor": "AHT20.temp",
+          "value": 25.0
+        },
+        "intent_type": "threshold_control",
+        "loop_interval_ms": 1000,
+        "target_devices": [
+          "AHT20",
+          "SG90"
+        ]
+      },
+      "lua_code": "while true do\n  local data = aht20_read()\n  if data.temp > 25 then\n    servo_set(180)\n  end\n  delay(1000)\nend",
+      "mqtt_message": {
+        "payload": {
+          "auth_signature": "1839b0634536e4a57404a86ddbbb5c73d7fe53fa3ab7c1a6a0466eb039124df6",
+          "checksum": "sha256:042d2caeb2b5fd8764be6383ce29d67cbe8839469b0810fea5c206f9c8785d46",
+          "intent_type": "threshold_control",
+          "lua_code": "while true do\n  local data = aht20_read()\n  if data.temp > 25 then\n    servo_set(180)\n  end\n  delay(1000)\nend",
+          "need_confirm": true,
+          "rule_program": null,
+          "script_id": "script_140674478b26",
+          "target_device_id": "ra8p1_demo_001",
+          "version": "v1"
+        },
+        "request_id": "rtv_1780454761006",
+        "timestamp": 1780454768,
+        "type": "deploy_script"
+      },
+      "lua_validation": {
+        "calls": [
+          "aht20_read",
+          "delay",
+          "servo_set"
+        ],
+        "errors": [],
+        "ok": true
+      },
+      "mqtt_enabled": true,
+      "published": true,
+      "ack_received": false,
+      "ack": null,
+      "created_at": 1780454769,
+      "updated_at": 1780454769
+    },
+    "device_script_state": "TRIGGERED",
+    "device_last_request_id": "rtv_1780402401251",
+    "device_last_script_id": "script_140674478b26",
+    "device_temp": 28.4,
+    "device_last_execution": {
+      "state": "TRIGGERED",
+      "reason": "COND_TRUE",
+      "operator": ">",
+      "action": "SG90",
+      "sample": true,
+      "threshold": 25,
+      "angle": 180,
+      "temp": 28.4
+    },
+    "last_event": {
+      "payload": {
+        "device_id": "ra8p1_demo_001",
+        "script_id": "script_140674478b26",
+        "state": "TRIGGERED",
+        "sample": true,
+        "reason": "COND_TRUE",
+        "operator": ">",
+        "action": "SG90",
+        "threshold": 25,
+        "angle": 180,
+        "temp": 28.4
+      },
+      "type": "execution_state",
+      "request_id": "rtv_1780402401251"
+    },
+    "recent_events": [
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "online",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            }
+          },
+          "type": "status"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "waiting",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.5
+            }
+          },
+          "type": "status"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.5
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "type": "telemetry",
+          "request_id": "telemetry_tick"
+        }
+      },
+      {
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message": {
+          "payload": {
+            "hardware_list": [
+              {
+                "type": "AHT20",
+                "status": "online"
+              }
+            ],
+            "device_id": "ra8p1_demo_001",
+            "state": "ONLINE",
+            "wifi": "connected",
+            "mqtt": "connected",
+            "uart": "waiting",
+            "script_state": "TRIGGERED",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "last_intent_type": "threshold_control",
+            "last_execution": {
+              "state": "TRIGGERED",
+              "reason": "COND_TRUE",
+              "operator": ">",
+              "action": "SG90",
+              "sample": true,
+              "threshold": 25,
+              "angle": 180,
+              "temp": 28.4
+            },
+            "aht20": {
+              "status": "online",
+              "crc_ok": true,
+              "temp": 28.4,
+              "humidity": 41.4
+            }
+          },
+          "type": "status"
+        }
+      }
+    ],
+    "recent_messages": [
+      {
+        "id": 202313,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402522
+      },
+      {
+        "id": 202312,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402519
+      },
+      {
+        "id": 202311,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "online",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402519
+      },
+      {
+        "id": 202310,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402517
+      },
+      {
+        "id": 202309,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402517
+      },
+      {
+        "id": 202308,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.4,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402515
+      },
+      {
+        "id": 202307,
+        "request_id": "",
+        "device_id": "ra8p1_demo_001",
+        "channel": "status",
+        "topic": "cloudbridge/ra8p1_demo_001/status",
+        "message_type": "status",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.4,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001",
+            "hardware_list": [
+              {
+                "status": "online",
+                "type": "AHT20"
+              }
+            ],
+            "last_execution": {
+              "action": "SG90",
+              "angle": 180,
+              "operator": ">",
+              "reason": "COND_TRUE",
+              "sample": true,
+              "state": "TRIGGERED",
+              "temp": 28.4,
+              "threshold": 25
+            },
+            "last_intent_type": "threshold_control",
+            "last_request_id": "rtv_1780402401251",
+            "last_script_id": "script_140674478b26",
+            "mqtt": "connected",
+            "script_state": "TRIGGERED",
+            "state": "ONLINE",
+            "uart": "waiting",
+            "wifi": "connected"
+          },
+          "type": "status"
+        },
+        "created_at": 1780402514
+      },
+      {
+        "id": 202306,
+        "request_id": "telemetry_tick",
+        "device_id": "ra8p1_demo_001",
+        "channel": "telemetry",
+        "topic": "cloudbridge/ra8p1_demo_001/telemetry",
+        "message_type": "telemetry",
+        "message": {
+          "payload": {
+            "aht20": {
+              "crc_ok": true,
+              "humidity": 41.5,
+              "status": "online",
+              "temp": 28.4
+            },
+            "device_id": "ra8p1_demo_001"
+          },
+          "request_id": "telemetry_tick",
+          "type": "telemetry"
+        },
+        "created_at": 1780402512
+      }
+    ],
+    "ok": false
+  },
+  "ok": false
+}

@@ -1,0 +1,90 @@
+# ============================================================================
+# Build artifacts (RA8P1 / e2studio)
+# ============================================================================
+Debug/**/*.o
+Debug/**/*.d
+Debug/**/*.su
+Debug/**/*.cyclo
+Debug/**/*.in
+Debug/codex_*
+Debug/jlink_*.log
+Debug/rtt_capture_*.txt
+Debug/nl_input_payload.bin
+Debug/RA8P1_Viewing_Screen_ESP32_Link.elf
+Debug/RA8P1_Viewing_Screen_ESP32_Link.srec
+Debug/RA8P1_Viewing_Screen_ESP32_Link.map
+Debug/RA8P1_Viewing_Screen_ESP32_Link.rpd
+Debug/RA8P1_Viewing_Screen_ESP32_Link.sbd
+*.o
+*.d
+*.su
+*.elf
+*.srec
+*.map
+*.bin
+*.hex
+*.rpd
+*.sbd
+
+# ============================================================================
+# ESP32-S3 build output (keep source, ignore all build artifacts)
+# ============================================================================
+esp32-s3-uart-link-arduino/esp32_s3_uart_link/build/
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.python-version
+
+# ============================================================================
+# Logs / runtime / temp
+# ============================================================================
+.tools/
+*.zip
+.tmp_*
+tmp_*
+tmp/
+JLinkLog.log
+debug.log
+esp32_compile_verbose.log
+runtime/
+tmp_sg90_docs/
+tools/*.log
+*.log
+
+# ============================================================================
+# UI tooling
+# ============================================================================
+UI/playwright-*.png
+
+# ============================================================================
+# Secrets / local configuration (NEVER commit real credentials)
+# ============================================================================
+secrets.local.*
+secrets.local.*
+*.secret
+**/api_token.txt
+
+# ============================================================================
+# IDE / editor
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ============================================================================
+# J-Link / debugger session files
+# ============================================================================
+JLink*.log
+*.jlink.bak
