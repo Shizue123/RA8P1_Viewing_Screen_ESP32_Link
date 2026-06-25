@@ -105,6 +105,13 @@ RA8P1_Viewing_Screen_ESP32_Link/
 │   └── ...
 ├── esp32-s3-uart-link-arduino/  # ESP32-S3 桥接固件 (Arduino)
 │   └── esp32_s3_uart_link/esp32_s3_uart_link.ino
+├── cloud/                # 云端服务（FastAPI + Web + MQTT + Agent）
+│   ├── app/              # 后端：API 路由、Agent 编排、MQTT、设备状态
+│   ├── web/              # 前端：原生 HTML/CSS/JS
+│   ├── tests/            # Pytest 测试套件
+│   ├── prompts/          # 系统提示词
+│   ├── requirements.txt  # Python 依赖
+│   └── README.md         # 云端详细文档
 ├── ra/ ra_gen/ ra_cfg/   # Renesas FSP 配置与生成代码
 ├── lvgl/                 # LVGL 源码（vendored）
 ├── docs/                 # 设计基线、接线、验收、故障复盘
@@ -152,6 +159,19 @@ arduino-cli upload -p <COM_PORT> --fqbn esp32:esp32:esp32s3 \
   esp32-s3-uart-link-arduino/esp32_s3_uart_link
 ```
 
+### 运行云端服务（可选）
+
+云端服务提供自然语言 → 规则下发、Web 控制台、设备注册与状态聚合。详见 [`cloud/README.md`](cloud/README.md)。
+
+```bash
+cd cloud
+cp .env.example .env          # 按需填写 MQTT / DeepSeek / Hermes 凭证
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+默认 `MQTT_ENABLED=false`，接口会生成完整 MQTT 消息但不连接 broker；配置好 broker 后在 `.env` 中启用。
+
 ## 凭证与配置
 
 > ⚠️ **本仓库不含任何真实凭证。** 所有 Wi-Fi、MQTT、云端 API Token 与服务器地址均已替换为占位符。
@@ -167,6 +187,11 @@ arduino-cli upload -p <COM_PORT> --fqbn esp32:esp32:esp32s3 \
 | `your-mqtt-username` / `your-mqtt-password` | `esp32_..._link.ino` | MQTT 凭证 |
 | `your-cloud-host` | `esp32_..._link.ino` · `tools/validate_*.py` | 云端 HTTP 主机 |
 | `your-cloud-api-token` | `esp32_..._link.ino` | 云端 API Token |
+| `<your-domain>` | `cloud/README.md` | 云端公网域名 |
+
+云端服务自身的配置（MQTT broker、DeepSeek API Key、QQBot、Hermes 网关等）通过
+[`cloud/.env.example`](cloud/.env.example) 管理，复制为 `.env` 后填写真实值；
+`.env` 与 `cloud/runtime/` 已在 `.gitignore` 中排除，不会被提交。
 
 ## 文档导航
 

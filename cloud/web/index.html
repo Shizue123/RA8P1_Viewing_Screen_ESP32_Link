@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Vela</title>
+    <link rel="icon" href="/assets/vela-mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css?v=20260621-signal-clarity-1" />
+  </head>
+  <body>
+    <main id="authView" class="auth-view">
+      <div class="auth-atmosphere" aria-hidden="true">
+        <canvas id="authCanvas"></canvas>
+        <div class="auth-grid-plane"></div>
+        <div id="authScene" class="auth-scene">
+          <div class="scene-orbit orbit-one"><i></i><i></i><i></i></div>
+          <div class="scene-orbit orbit-two"><i></i><i></i></div>
+          <div id="authObject" class="auth-object">
+            <div class="object-shadow"></div>
+            <div class="object-slab slab-back"><span>V / 01</span><b>PRIVATE</b></div>
+            <div class="object-slab slab-mid">
+              <span class="slab-line"></span><span class="slab-line short"></span><em>ACCESS LAYER</em>
+            </div>
+            <div class="object-slab slab-front">
+              <img src="/assets/vela-mark.svg" alt="" />
+              <span class="object-index">01</span>
+              <span class="object-status"><i></i> READY</span>
+            </div>
+          </div>
+          <div class="scene-coordinate coordinate-a">36.08 / 120.12</div>
+          <div class="scene-coordinate coordinate-b">SESSION 01</div>
+        </div>
+      </div>
+      <section class="auth-panel">
+        <div class="auth-stack">
+          <div class="auth-brand">
+            <img src="/assets/vela-mark.svg" alt="" />
+            <span>Vela</span>
+            <i></i>
+          </div>
+          <div class="auth-heading">
+            <p class="auth-eyebrow">Private access</p>
+            <h1 id="authTitle">选择账户</h1>
+            <p id="authHint">继续使用已保存的账户，或登录其他账户。</p>
+          </div>
+
+          <div id="rememberedAccounts" class="remembered-accounts"></div>
+          <button id="continueSessionButton" class="session-account" type="button" hidden>
+            <span id="sessionInitial" class="account-avatar">U</span>
+            <span><strong id="sessionUsername">当前账户</strong><small>当前会话仍有效</small></span>
+            <b>继续</b>
+          </button>
+
+          <form id="authForm" class="auth-card">
+            <label>
+              账户
+              <input id="usernameInput" name="username" autocomplete="username" minlength="3" required />
+            </label>
+            <label>
+              密码
+              <input id="passwordInput" name="password" type="password" autocomplete="current-password" minlength="6" required />
+            </label>
+            <p id="authError" class="form-error" role="alert"></p>
+            <button id="authSubmit" class="primary-action" type="submit">登录</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div id="appView" class="app-view" hidden>
+      <aside class="rail">
+        <div class="rail-brand">
+          <div><img src="/assets/vela-mark.svg" alt="" /><strong>Vela</strong></div>
+          <button id="collapseRailButton" class="icon-button" type="button" aria-label="折叠侧栏" title="折叠侧栏">‹</button>
+        </div>
+        <div class="rail-actions">
+          <button id="newChatButton" class="rail-action" type="button"><span class="action-icon">＋</span><span>发起新对话</span></button>
+          <button id="searchChatButton" class="rail-action" type="button"><span class="action-icon">⌕</span><span>搜索对话内容</span></button>
+          <button class="rail-action" type="button" data-view="signals"><span class="action-icon">⌘</span><span>信号通道</span></button>
+          <button class="rail-action" type="button" data-view="models"><span class="action-icon">◇</span><span>模型配置</span></button>
+          <button class="rail-action" type="button" data-view="provision"><span class="action-icon">◌</span><span>设备配网</span></button>
+        </div>
+        <div id="searchPanel" class="search-panel" hidden>
+          <input id="conversationSearch" type="search" placeholder="搜索最近对话" autocomplete="off" />
+        </div>
+        <div id="conversationSection" class="conversation-section">
+          <p class="rail-label">最近</p>
+          <div id="conversationList" class="conversation-list"></div>
+        </div>
+        <button id="railAccountButton" class="rail-account" type="button">
+          <span id="railUserInitial">U</span>
+          <span><strong id="railUsername">user</strong><small id="railRole">member</small></span>
+          <b>⚙</b>
+        </button>
+      </aside>
+
+      <div class="workspace">
+        <header class="workspace-header">
+          <button id="expandRailButton" class="icon-button expand-rail" type="button" aria-label="展开侧栏" title="展开侧栏" hidden>›</button>
+          <h1 id="viewTitle">对话</h1>
+          <div class="device-switcher">
+            <span id="deviceStatusDot" class="status-dot-mini offline"></span>
+            <select id="deviceSelect" aria-label="切换当前设备">
+              <option>读取设备中</option>
+            </select>
+          </div>
+        </header>
+
+        <section class="view active chat-view" data-panel="chat">
+          <div id="chatScroll" class="chat-scroll">
+            <div id="emptyChat" class="empty-chat">
+              <img class="empty-mark" src="/assets/vela-mark.svg" alt="" />
+              <h2>从这里开始</h2>
+              <p>创建一个新对话，或从左侧继续之前的内容。</p>
+            </div>
+            <div id="chatStream" class="chat-stream" aria-live="polite"></div>
+          </div>
+          <form id="chatForm" class="composer">
+            <textarea id="chatInput" rows="1" maxlength="8000" placeholder="输入内容" required></textarea>
+            <button id="sendButton" type="submit">发送</button>
+            <div class="composer-meta">
+              <span>Enter 发送 · Shift + Enter 换行</span>
+              <span class="composer-state"><select id="chatModelSelect" class="chat-model-select" aria-label="切换当前模型"><option>模型读取中</option></select><span id="chatStatus">在线</span></span>
+            </div>
+          </form>
+        </section>
+
+        <section class="view scrollable-view" data-panel="signals">
+          <div class="section-intro"><p class="kicker">Signal map</p><h2>信号通道</h2><p>这里按物理标准口或总线展示实时状态。像 I2C 这类共享总线，会在同一张物理口卡片下列出多个挂载端点；这表示它们共用同一条总线，不代表新增了额外物理口。</p></div>
+          <div id="signalList" class="signal-list"></div>
+        </section>
+
+        <section class="view scrollable-view" data-panel="models">
+          <div class="model-config-shell">
+            <section class="model-hero">
+              <div>
+                <p class="kicker">Model switch</p>
+                <h2>模型配置</h2>
+              </div>
+              <div id="activeModelBadge" class="active-model-badge">读取中</div>
+            </section>
+            <form id="modelProfileForm" class="model-profile-form">
+              <div class="model-form-head">
+                <div><p class="kicker">Provider</p><h3>新增模型</h3></div>
+                <select id="modelPresetSelect" aria-label="模型预设">
+                  <option value="qwen">千问 DashScope</option>
+                  <option value="gemini">Gemini</option>
+                  <option value="xiaomi">小米 / MiMo</option>
+                  <option value="custom">自定义 OpenAI-compatible</option>
+                </select>
+              </div>
+              <div class="model-form-grid">
+                <label>名称<input id="modelLabelInput" required maxlength="80" /></label>
+                <label>Provider ID<input id="modelProviderInput" required maxlength="40" pattern="[a-z0-9_-]+" /></label>
+                <label>模型名<input id="modelNameInput" required maxlength="120" /></label>
+                <label>Base URL<input id="modelBaseUrlInput" required maxlength="300" /></label>
+                <label class="wide">API Key<input id="modelApiKeyInput" type="password" required maxlength="500" autocomplete="off" /></label>
+              </div>
+              <button class="primary-action" type="submit">保存模型</button>
+            </form>
+            <div id="modelConfigList" class="model-config-list"></div>
+            <p id="modelConfigMessage" class="form-message"></p>
+          </div>
+        </section>
+
+        <section class="view scrollable-view" data-panel="provision">
+          <div class="provision-shell">
+            <section class="model-hero">
+              <div>
+                <p class="kicker">USB Provision</p>
+                <h2>设备配网</h2>
+              </div>
+              <div id="provisionStatusBadge" class="active-model-badge">未连接</div>
+            </section>
+            <section class="provision-grid">
+              <form id="wifiProvisionForm" class="model-profile-form">
+                <div class="model-form-head">
+                  <div><p class="kicker">WiFi</p><h3>写入 ESP32</h3></div>
+                  <button id="connectSerialButton" class="secondary-action" type="button">连接 USB</button>
+                </div>
+                <div class="model-form-grid">
+                  <label>SSID<input id="wifiSsidInput" required maxlength="96" autocomplete="off" /></label>
+                  <label>密码<input id="wifiPasswordInput" type="password" maxlength="96" autocomplete="off" /></label>
+                </div>
+                <p class="wifi-band-note">请选择 2.4GHz WiFi 或开启 2.4GHz 的热点；ESP32-S3 不能连接纯 5GHz 网络。</p>
+                <div class="provision-actions">
+                  <button class="primary-action" type="submit">写入并连接</button>
+                  <button id="scanWifiButton" class="secondary-action" type="button">扫描</button>
+                  <button id="wifiStatusButton" class="secondary-action" type="button">状态</button>
+                  <button id="clearWifiButton" class="secondary-action danger-soft" type="button">清除</button>
+                </div>
+                <p id="wifiProvisionMessage" class="form-message"></p>
+              </form>
+              <article class="provision-panel">
+                <div class="card-heading"><div><p class="kicker">Networks</p><h3>扫描结果</h3></div></div>
+                <div id="wifiNetworkList" class="wifi-network-list"></div>
+              </article>
+              <article class="provision-panel">
+                <div class="card-heading"><div><p class="kicker">Saved</p><h3>已保存 WiFi</h3></div></div>
+                <div id="savedWifiList" class="wifi-network-list"></div>
+              </article>
+              <article class="provision-panel wide">
+                <div class="card-heading"><div><p class="kicker">Device</p><h3>串口日志</h3></div></div>
+                <div id="provisionLog" class="provision-log"></div>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <section class="view scrollable-view" data-panel="account">
+          <div class="account-grid">
+            <article class="account-card">
+              <p class="kicker">Current</p>
+              <h2 id="accountName">-</h2>
+              <p id="accountRole" class="muted">-</p>
+              <div class="account-actions">
+                <button id="switchAccountButton" class="primary-action" type="button">切换账户</button>
+                <button id="logoutButton" class="secondary-action" type="button">退出账户</button>
+              </div>
+            </article>
+            <form id="passwordForm" class="account-card password-card">
+              <p class="kicker">Security</p><h2>修改密码</h2>
+              <label>当前密码<input id="currentPassword" type="password" autocomplete="current-password" required minlength="6" /></label>
+              <label>新密码<input id="newPassword" type="password" autocomplete="new-password" required minlength="6" /></label>
+              <button class="primary-action" type="submit">更新密码</button>
+              <p id="passwordMessage" class="form-message"></p>
+            </form>
+            <article id="userAdminCard" class="account-card wide" hidden>
+              <div class="card-heading"><div><p class="kicker">Administration</p><h2>用户管理</h2></div><button id="addUserButton" class="secondary-action" type="button">新增用户</button></div>
+              <div id="userList" class="user-list"></div>
+              <p id="userAdminMessage" class="form-message"></p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <dialog id="userDialog">
+      <form id="userForm" class="dialog-card">
+        <p class="kicker">New account</p><h2>新增服务器用户</h2>
+        <label>用户名<input id="newUsername" required minlength="3" pattern="[A-Za-z0-9_.-]+" /></label>
+        <label>初始密码<input id="newUserPassword" type="password" required minlength="6" /></label>
+        <label>角色<select id="newUserRole"><option value="member">成员</option><option value="admin">管理员</option></select></label>
+        <p id="userFormError" class="form-error"></p>
+        <div class="dialog-actions"><button id="cancelUserButton" class="secondary-action" type="button">取消</button><button class="primary-action" type="submit">创建</button></div>
+      </form>
+    </dialog>
+
+    <script src="/assets/vendor/gsap.min.js?v=3.13.0"></script>
+    <script src="/assets/auth-motion.js?v=20260606-vela-depth-3"></script>
+    <script src="/assets/app.js?v=20260623-context-task-1"></script>
+  </body>
+</html>
+

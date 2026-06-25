@@ -66,9 +66,14 @@ UI/playwright-*.png
 # Secrets / local configuration (NEVER commit real credentials)
 # ============================================================================
 secrets.local.*
-secrets.local.*
 *.secret
 **/api_token.txt
+
+# Cloud backend — never commit real env or runtime state
+cloud/.env
+cloud/runtime/
+cloud/.pytest_cache/
+cloud/**/__pycache__/
 
 # ============================================================================
 # IDE / editor
