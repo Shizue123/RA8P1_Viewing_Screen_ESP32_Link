@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SECURITY, issue/PR templates, and this changelog.
 - `docs/cloud_integration_setup.md` describing how to fill in the
   placeholder credentials before flashing.
+- Cloud backend (`cloud/`): FastAPI app, agent_service (Hermes/DeepSeek
+  orchestrator with state graph), MQTT service, device state store, Web
+  control panel, automation tasks, and pytest suite.
 
 ### Changed
 - Stripped all real credentials (WiFi, MQTT, cloud API token, server IP)
@@ -36,5 +39,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   state machine.
 - No fresh sensor data → screen, web and dialog must not fabricate values.
 
-[Unreleased]: https://github.com/Shizue123/RA8P1_Viewing_Screen_ESP32_Link/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/Shizue123/RA8P1_Viewing_Screen_ESP32_Link/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Shizue123/RA8P1_EnvControl_Terminal/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Shizue123/RA8P1_EnvControl_Terminal/releases/tag/v0.1.0
